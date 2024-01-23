@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import altair
 import streamlit as st
 import pickle
 from sklearn.ensemble import RandomForestClassifier
@@ -8,7 +7,6 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
-st.set_option('browser.gatherUsageStats', False)
 # Path del modelo preentrenado
 MODEL_PATH = 'models/random_forest_model.pkl'
 
