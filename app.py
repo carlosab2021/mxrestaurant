@@ -6,6 +6,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import NearestNeighbors
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
+import webbrowser
 
 # Path del modelo preentrenado
 MODEL_PATH = 'models/random_forest_model.pkl'
@@ -14,10 +15,10 @@ MODEL_PATH = 'models/random_forest_model.pkl'
 def model_prediction(x_in, model, df):
     x = np.asarray(x_in).reshape(1, -1)
     preds = model.predict(x)
-    
+
     # Obtener la información de restaurantes predichos
     restaurant_info = df.loc[df['Stars'] == preds[0], ['Name', 'Latitude', 'Longitude', 'Sentimiento', 'Stars']]
-    
+
     return preds, restaurant_info
 
 # Cargar el conjunto de datos
@@ -31,11 +32,11 @@ def load_data():
 def preprocess_data(df):
     features = ['Useful', 'Funny', 'Cool', 'Sentimiento']
     target = 'Stars'
-    
+
     # Convertir etiquetas de 'Sentimiento' a valores numéricos usando codificación de etiquetas
     label_encoder = LabelEncoder()
     df['Sentimiento'] = label_encoder.fit_transform(df['Sentimiento'])
-    
+
     X = df[features]
     y = df[target]
     return X, y
@@ -57,7 +58,10 @@ def find_nearest_non_repeated(user_location, restaurant_locations, recommended_i
 
     return distances.flatten(), indices
 
-
+# Función para abrir Google Maps con la ubicación del restaurante
+def open_google_maps(lat, lon):
+    url = f'https://www.google.com/maps/place/{lat},{lon}'
+    webbrowser.open(url, new=2)
 
 # Función principal
 def main():
@@ -93,7 +97,7 @@ def main():
         st.error("Error al interpretar la ubicación. Asegúrese de ingresar valores válidos.")
         st.stop()
 
- # Botón de predicción
+    # Botón de predicción
     if st.button("Recomendados por calificaciones y distancia"):
         x_in = [0, 0, 0, 0]  # Puedes ajustar los valores según tus necesidades
         prediction, restaurant_info = model_prediction(x_in, model, df)
@@ -101,7 +105,7 @@ def main():
         # Calcular distancias y encontrar los vecinos más cercanos (excluyendo los ya recomendados y con el mismo nombre)
         user_location = np.array([user_lat, user_lon]).reshape(1, -1)
         restaurant_locations = df[['Latitude', 'Longitude']]
-        
+
         distances, indices = find_nearest_non_repeated(user_location, restaurant_locations, recommended_indices, df)
 
         # Obtener la información de restaurantes cercanos
@@ -119,18 +123,20 @@ def main():
             st.write(f'Ubicación (Latitud): {restaurant["Latitude"]}')
             st.write(f'Ubicación (Longitud): {restaurant["Longitude"]}')
 
-    # Mapear el sentimiento a la interpretación deseada
+            # Mapear el sentimiento a la interpretación deseada
             sentimiento_interpretado = "Malo" if restaurant["Sentimiento"] == 0 else "Neutral" if restaurant["Sentimiento"] == 1 else "Muy Bueno"
             st.write(f'Apreciación promedio de Usuarios: {sentimiento_interpretado}')
 
             st.write(f'Calificación (Stars): {restaurant["Stars"]}')
             st.write(f'Distancia a su ubicación: {restaurant["Distance"]:.2f} km')
+
+            # Botón para abrir Google Maps
+            if st.button(f'Ir a {restaurant["Name"]} en Google Maps'):
+                open_google_maps(restaurant["Latitude"], restaurant["Longitude"])
+
             st.write("---")
-        # Actualizar la lista de índices recomendados
+            # Actualizar la lista de índices recomendados
             recommended_indices.extend(indices)
 
-        
 if __name__ == '__main__':
     main()
-
-
