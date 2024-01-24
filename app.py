@@ -58,11 +58,6 @@ def find_nearest_non_repeated(user_location, restaurant_locations, recommended_i
 
     return distances.flatten(), indices
 
-# Función para abrir Google Maps con la ubicación del restaurante
-def open_google_maps(lat, lon):
-    url = f'https://www.google.com/maps/place/{lat},{lon}'
-    webbrowser.open(url, new=2)
-
 # Función principal
 def main():
     # Cargar el conjunto de datos
@@ -130,9 +125,9 @@ def main():
             st.write(f'Calificación (Stars): {restaurant["Stars"]}')
             st.write(f'Distancia a su ubicación: {restaurant["Distance"]:.2f} km')
 
-            # Botón para abrir Google Maps
-            if st.button(f'Ir a {restaurant["Name"]} en Google Maps'):
-                open_google_maps(restaurant["Latitude"], restaurant["Longitude"])
+            # Enlace HTML para abrir Google Maps en una nueva pestaña
+            google_maps_link = f'<a href="https://www.google.com/maps/place/{restaurant["Latitude"]},{restaurant["Longitude"]}" target="_blank">Ir a Google Maps</a>'
+            st.markdown(google_maps_link, unsafe_allow_html=True)
 
             st.write("---")
             # Actualizar la lista de índices recomendados
