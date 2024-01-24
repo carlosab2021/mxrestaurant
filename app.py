@@ -8,8 +8,31 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 import webbrowser
 
+# Definir colores
+background_color = "#d9efef"
+title_color = "#436Ab8"
+
+# Configurar el fondo y el color de los títulos
+st.markdown(
+    f"""
+    <style>
+        .reportview-container {{
+            background-color: {background_color};
+            color: {title_color};
+        }}
+        h1, h2, h3, h4, h5, h6, label, div {{
+            color: {title_color};
+        }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Agregar un logo en la esquina superior izquierda
+logo = st.image('data/imagen/LOGO2.png', width=100)
+
 # Path del modelo preentrenado
-MODEL_PATH = 'models/random_forest_model.pkl'
+MODEL_PATH = 'models/random_restaurant_model.pkl'
 
 # Se recibe el conjunto de datos y el modelo, devuelve la predicción
 def model_prediction(x_in, model, df):
@@ -126,7 +149,7 @@ def main():
             st.write(f'Distancia a su ubicación: {restaurant["Distance"]:.2f} km')
 
             # Enlace HTML para abrir Google Maps en una nueva pestaña
-            google_maps_link = f'<a href="https://www.google.com/maps/place/{restaurant["Latitude"]},{restaurant["Longitude"]}" target="_blank">Ir a Google Maps</a>'
+            google_maps_link = f'<a href="https://www.google.com/maps/place/{restaurant["Latitude"]},{restaurant["Longitude"]}" target="_blank">Ir al Restaurant</a>'
             st.markdown(google_maps_link, unsafe_allow_html=True)
 
             st.write("---")
