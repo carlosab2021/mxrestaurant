@@ -98,11 +98,14 @@ def main():
         pickle.dump(model, file)
 
     # Título con estilo azul y centrado
-    html_title = """
-    <h1 style="color: blue; text-align: center;">Sistema de Recomendación para Restaurantes Mexicanos</h1>
-"""
-    st.markdown(html_title, unsafe_allow_html=True)
-
+    st.title("Consultora SMART DATA - Análisis de Datos para Gruma")
+    st.markdown(
+        """
+        ¡Bienvenido a la presentación de la consultora SMART DATA! Estamos aquí para ayudar a Gruma a entender el mercado estadounidense 
+        y su interés en la comida mexicana. Vamos a explorar si el consumo de comida mexicana en restaurantes está en crecimiento en Estados Unidos 
+        utilizando nuestro sistema de recomendación.
+        """
+    )
     # Lista de índices recomendados
     recommended_indices = []
 
